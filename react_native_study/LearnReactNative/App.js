@@ -1,14 +1,25 @@
-import React from 'react';
-import {SafeAreaView, View, Text} from 'react-native';
+import React, {useState} from 'react';
+import {SafeAreaView, StyleSheet} from 'react-native';
+import Counter from './conponents/Counter';
 
 const App = () => {
+  const [count, setCount] = useState(0);
+
+  const onIncrease = () => setCount(count + 1);
+  const onDecrease = () => setCount(count - 1);
+
   return (
-    <SafeAreaView>
-      <View>
-        <Text>Hello React!</Text>
-      </View>
+    <SafeAreaView style={styles.full}>
+      <Counter count={count} onIncrease={onIncrease} onDecrease={onDecrease} />
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  full: {
+    flex: 1,
+    backgroundColor: 'lightgray',
+  },
+});
 
 export default App;
