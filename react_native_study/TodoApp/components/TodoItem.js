@@ -1,17 +1,29 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
-function TodoItem({id, text, done}) {
+function TodoItem({id, text, done, onToggle}) {
   return (
     <View style={styles.item}>
-      <View style={[styles.circle, done && styles.filled]}>
-        {done && (
-          <Image
-            source={require('../assets/icons/check_white/check_white.png')}
-          />
-        )}
-      </View>
-      <Text style={[styles.text, done && styles.lineThrough]}>{text}</Text>
+      <TouchableOpacity onPress={() => onToggle(id)}>
+        <View style={[styles.circle, done && styles.filled]}>
+          {done && (
+            <Image
+              source={require('../assets/icons/check_white/check_white.png')}
+            />
+          )}
+        </View>
+      </TouchableOpacity>
+      <Text
+        style={[styles.text, done && styles.lineThrough]}
+        onPress={() => onToggle(id)}>
+        {text}
+      </Text>
+      {done ? (
+        <Icon name="delete" size={32} color="gray" />
+      ) : (
+        <View style={styles.removePlacehoder} />
+      )}
     </View>
   );
 }
@@ -43,6 +55,10 @@ const styles = StyleSheet.create({
   lineThrough: {
     color: '#9e9e9e',
     textDecorationLine: 'line-through',
+  },
+  removePlacehoder: {
+    width: 32,
+    height: 32,
   },
 });
 
