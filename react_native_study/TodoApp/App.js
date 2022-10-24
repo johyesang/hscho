@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -6,11 +6,14 @@ import {
   Platform,
   StyleSheet,
 } from 'react-native';
-import DateHead from './components/DateHead';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-community/async-storage';
+
+import DateHead from './components/DateHead';
 import AddTodo from './components/AddTodo';
 import Empty from './components/Empty';
 import TodoList from './components/TodoList';
+import todosStorage from './storages/todoStorage';
 
 function App() {
   const today = new Date();
@@ -20,6 +23,14 @@ function App() {
     {id: 2, text: '리액스 네이티브 기초 공부', done: false},
     {id: 3, text: '투두리스트 만들어보기', done: false},
   ]);
+
+  useEffect(() => {
+    todosStorage.get().then(setTodos).catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    todosStorage.set(todos).catch(console.error);
+  }, [todos]);
 
   const onInsert = text => {
     const nextId =
@@ -40,9 +51,9 @@ function App() {
     setTodos(nextTodos);
   };
 
-  const deleteItem = id => {
-    const deletedTodos = todos.fillter(todos => todos.id !== id);
-    setTodos(deletedTodos);
+  const onRemove = id => {
+    const nextTodos = todos.filter(todo => todo.id !== id);
+    setTodos(nextTodos);
   };
 
   return (
@@ -55,7 +66,7 @@ function App() {
           {todos.length === 0 ? (
             <Empty />
           ) : (
-            <TodoList todos={todos} onToggle={onToggle} onPress={deleteItem} />
+            <TodoList todos={todos} onToggle={onToggle} onRemove={onRemove} />
           )}
           <AddTodo onInsert={onInsert} />
         </KeyboardAvoidingView>
