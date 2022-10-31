@@ -25,7 +25,7 @@ function App() {
   ]);
 
   useEffect(() => {
-    todosStorage.get().then(setTodos).catch(console.error);
+    todosStorage.get().then(setTodos).catch(console);
   }, []);
 
   useEffect(() => {
